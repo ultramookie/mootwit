@@ -27,6 +27,8 @@ for page in range(1,maxrounds):
 	url = urlbase + '&page=' + str(page)
 	twitreturn = urllib.urlopen(url)
 	twitjson = json.loads(twitreturn.read())
+	if not twitjson:
+		break
 	for entity in twitjson:
 		for field in fields:
 			if field == 'id':
