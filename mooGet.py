@@ -10,7 +10,7 @@ count = 200
 # hard limit on the number of entries from a user by twitter
 hardlimit = 3200
 # max rounds that can happen
-maxrounds = hardlimit / 200
+maxrounds = hardlimit / count
 
 # for converting twitter's months to numbers
 month_dict = {'Jan':'01','Feb':'02','Mar':'03','Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
