@@ -5,7 +5,7 @@ import json
 import MySQLdb as mdb
 import codecs
 
-# database stuff
+# database stuff populate as necessary
 dbuser=''
 dbpass=''
 dbhost='localhost'
@@ -28,21 +28,24 @@ def to_dict(name):
 # the fields i want
 fields = ['id','created_at','text']
 
-con = mdb.connect(dbhost,dbuser,dbpass,dbname)
-
-con.query("SELECT count(id) from mootwit")
-result = con.use_result()
-
 # bootstrap or start from a last processed tweet id
-if result.fetch_row()[0] == 0:
+bootcon = mdb.connect(dbhost,dbuser,dbpass,dbname)
+bootcon.query("SELECT count(id) from mootwit")
+result = bootcon.use_result()
+bootcheck = result.fetch_row()[0][0]
+
+if bootcheck == 0:
 	sinceid = ''
-else
-	con.query("SELECT id from mootwit order by id DESC limit 1")
-	result = con.use_result()
-	sinceid = "&since_id=%s" % str(result.fetch_row()[0])
+else:
+	sincecon = mdb.connect(dbhost,dbuser,dbpass,dbname)
+	sincecon.query("SELECT id from mootwit order by id DESC limit 1")
+	result = sincecon.use_result()
+	sinceid = "&since_id=%s" % str(result.fetch_row()[0][0])
 
 # the base url
 urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&trim_user=true' + sinceid
+
+con = mdb.connect(dbhost,dbuser,dbpass,dbname)
 
 for page in range(1,maxrounds + 1):
 	url = urlbase + '&page=' + str(page)
@@ -57,7 +60,6 @@ for page in range(1,maxrounds + 1):
 			if field == 'text':
 				intext = entity['text']
 				tweettext = intext.encode('ascii','ignore')
-				print tweettext
 			if field == 'created_at':
 				datesplit = entity[field].rsplit()
 				year = datesplit[5]
