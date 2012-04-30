@@ -9,8 +9,8 @@
 error_reporting(E_ERROR | E_PARSE);
 
 
-$sitename = "mootwit";
-$siteurl = "http://whereveryouare.domainhere";
+$sitename = "umcore";
+$siteurl = "http://umcore.com";
 $indexNum = 20;
 $numOfEntries = getNumEntries();
 
@@ -42,19 +42,19 @@ function showEntriesArchive($num,$pnum) {
 
 function printEntry($id) {
        
-	$query = "select text, datediff(created_at, UTC_TIMESTAMP()) as date from mootwit where id = '$id'";
+	$query = "select url, text, datediff(created_at, UTC_TIMESTAMP()) as date from mootwit where id = '$id'";
         $result = mysql_query($query);
         $row = mysql_fetch_array($result);
 
         if (ereg(".*http.*",$row['text'])) {
-                $text = makeLinks($row['text']);
+                $text = makeLinks($row['text'],$row['url']);
         } else {
                 $text = $row['text'];
         }
 
         echo "<p class=\"entry\">" . $text . " </p>";
 	if ($row['date'] == 0) {
-		echo "<p class=\"timedate\"><a href=\"https://twitter.com/#!/mootwit/statuses/$id\">today</a></p><hr />";
+                echo "<p class=\"timedate\"><a href=\"https://twitter.com/#!/mootwit/statuses/$id\">today</a></p><hr />";
 	} else {
 		$diff = $row['date'] * -1;
 		if ($diff == 1) {
@@ -62,18 +62,17 @@ function printEntry($id) {
 		} else {
 			$days = " days";
 		}
-		echo "<p class=\"timedate\"><a href=\"https://twitter.com/#!/mootwit/statuses/$id\">$diff $days ago</a></p><hr />";
+                echo "<p class=\"timedate\"><a href=\"https://twitter.com/#!/mootwit/statuses/$id\">$diff $days ago</a></p><hr />";
 	}
 		
 }
 
-function makeLinks($text) {
+function makeLinks($text,$url) {
         $chunk = preg_split("/[\s,]+/", $text);
         $size = count($chunk);
 
         for($i=0;$i<$size;$i++) {
                 if(ereg("^http",$chunk[$i])) {
-                        $url = $chunk[$i];
                         $new = "<a href=\"$url\" rel=\"nofollow\" target=\"blank\">$url</a>";
                         $total = $total . " " . $new;
                 } else {
