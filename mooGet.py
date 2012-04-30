@@ -30,8 +30,19 @@ fields = ['id','created_at','text']
 
 con = mdb.connect(dbhost,dbuser,dbpass,dbname)
 
+con.query("SELECT count(id) from mootwit")
+result = con.use_result()
+
+# bootstrap or start from a last processed tweet id
+if result.fetch_row()[0] == 0:
+	sinceid = ''
+else
+	con.query("SELECT id from mootwit order by id DESC limit 1")
+	result = con.use_result()
+	sinceid = "&since_id=%s" % str(result.fetch_row()[0])
+
 # the base url
-urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&trim_user=true'
+urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&trim_user=true' + sinceid
 
 for page in range(1,maxrounds + 1):
 	url = urlbase + '&page=' + str(page)
@@ -56,7 +67,5 @@ for page in range(1,maxrounds + 1):
 				mdatetime = year + '-' + mon + '-' + day + ' ' + time
 	
 		cur = con.cursor()
-
 		sql = u"INSERT into mootwit (id,text,created_at) VALUES (%s,\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime)
-
 		cur.execute(sql)
