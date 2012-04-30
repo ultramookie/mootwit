@@ -54,7 +54,7 @@ function printEntry($id) {
 
         echo "<p class=\"entry\">" . $text . " </p>";
 	if ($row['date'] == 0) {
-		echo "<p class=\"timedate\">today</p><hr />";
+		echo "<p class=\"timedate\"><a href=\"https://twitter.com/#!/mootwit/statuses/$id\">today</a></p><hr />";
 	} else {
 		$diff = $row['date'] * -1;
 		if ($diff == 1) {
@@ -62,7 +62,7 @@ function printEntry($id) {
 		} else {
 			$days = " days";
 		}
-		echo "<p class=\"timedate\">$diff $days ago</p><hr />";
+		echo "<p class=\"timedate\"><a href=\"https://twitter.com/#!/mootwit/statuses/$id\">$diff $days ago</a></p><hr />";
 	}
 		
 }
