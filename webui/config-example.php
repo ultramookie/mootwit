@@ -11,4 +11,5 @@
 
 	# the password
 	$dbpass = "password";
+
 ?>
