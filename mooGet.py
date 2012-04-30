@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+# mootwit
+# steve mookie kong
+# licensed under gplv3
+# http://www.gnu.org/licenses/gpl-3.0.html
+
 import urllib
 import json
 import MySQLdb as mdb
