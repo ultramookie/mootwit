@@ -2,6 +2,14 @@
 
 import urllib
 import json
+import MySQLdb as mdb
+import codecs
+
+# database stuff
+dbuser=''
+dbpass=''
+dbhost='localhost'
+dbname='mootwit'
 
 # twitter username
 user = 'ultramookie'
@@ -20,10 +28,12 @@ def to_dict(name):
 # the fields i want
 fields = ['id','created_at','text']
 
+con = mdb.connect(dbhost,dbuser,dbpass,dbname)
+
 # the base url
 urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&trim_user=true'
 
-for page in range(1,maxrounds):
+for page in range(1,maxrounds + 1):
 	url = urlbase + '&page=' + str(page)
 	twitreturn = urllib.urlopen(url)
 	twitjson = json.loads(twitreturn.read())
@@ -34,7 +44,9 @@ for page in range(1,maxrounds):
 			if field == 'id':
 				tweetid = entity['id']
 			if field == 'text':
-				tweettext = entity['text']
+				intext = entity['text']
+				tweettext = intext.encode('ascii','ignore')
+				print tweettext
 			if field == 'created_at':
 				datesplit = entity[field].rsplit()
 				year = datesplit[5]
@@ -42,5 +54,9 @@ for page in range(1,maxrounds):
 				day = datesplit[2]
 				time = datesplit[3]
 				mdatetime = year + '-' + mon + '-' + day + ' ' + time
+	
+		cur = con.cursor()
 
-		print 'id: ' + str(tweetid) + '\ntext: ' + tweettext + '\ndate: ' + mdatetime + '\n'
+		sql = u"INSERT into mootwit (id,text,created_at) VALUES (%s,\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime)
+
+		cur.execute(sql)
