@@ -1,1 +1,38 @@
-attempt at twitter backup tool
+mootwit
+
+my reinventing another wheel for the sake of learning python.
+
+create a mysql database.
+
+use the schema file (mootwit.sql) to create the base table.
+
+edit the mooGet.py script and put in all the right stuff:
+  - db information
+  - twitter account to backup
+  - etc
+
+note: the account must be public for this to work.
+
+if that's all you want, then cron the mooGet.py script to
+run every so often to grab any new tweets.
+
+if you want a web front-end to display what you're backing
+up, use the files in "webui" to do that.
+
+copy "config-example.php" over to "config.php". then edit:
+  - db information
+
+edit the top of "mootwit.php" to customize to your liking:
+  - site name
+  - site url
+  - number of entries to display per page
+  - etc
+
+no warranties. no guarantees. have fun and don't blame me
+if something explodes.
+
+as always, licensed under gplv3
+http://www.gnu.org/licenses/gpl-3.0.html
+
+enjoy,
+mookie

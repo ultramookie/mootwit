@@ -12,7 +12,7 @@ dbhost='localhost'
 dbname='mootwit'
 
 # twitter username
-user = 'ultramookie'
+user = ''
 # number of entries to process at once
 count = 200
 # hard limit on the number of entries from a user by twitter
