@@ -10,10 +10,9 @@ error_reporting(E_ERROR | E_PARSE);
 
 
 $sitename = "mootwit";
-$siteurl = "http://whereveryouare.com";
+$siteurl = "http://whereveryouare.domainhere";
 $indexNum = 20;
 $numOfEntries = getNumEntries();
-$timezone = "PDT";
 
 function showEntriesIndex($num) {
 
