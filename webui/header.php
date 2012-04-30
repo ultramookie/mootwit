@@ -7,8 +7,8 @@ include_once("mootwit.php");
 <html>
 <head>
 <title><? echo "$sitename"; ?> </title>
-<link rel="stylesheet" type="text/css" href="base-min.css" />
-<link rel="stylesheet" type="text/css"  href="reset-fonts.css" />
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.0/build/cssreset/cssreset-min.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.0/build/cssfonts/cssfonts-min.css">
 <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
 </head>
