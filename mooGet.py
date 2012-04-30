@@ -9,6 +9,7 @@ import urllib
 import json
 import MySQLdb as mdb
 import codecs
+import pprint
 
 # database stuff populate as necessary
 dbuser=''
@@ -31,7 +32,7 @@ def to_dict(name):
    return month_dict[name]
 
 # the fields i want
-fields = ['id','created_at','text']
+fields = ['id','created_at','text','entities']
 
 # bootstrap or start from a last processed tweet id
 bootcon = mdb.connect(dbhost,dbuser,dbpass,dbname)
@@ -48,7 +49,7 @@ else:
 	sinceid = "&since_id=%s" % str(result.fetch_row()[0][0])
 
 # the base url
-urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&trim_user=true' + sinceid
+urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&include_entities=true&trim_user=true' + sinceid
 
 con = mdb.connect(dbhost,dbuser,dbpass,dbname)
 
@@ -72,7 +73,13 @@ for page in range(1,maxrounds + 1):
 				day = datesplit[2]
 				time = datesplit[3]
 				mdatetime = year + '-' + mon + '-' + day + ' ' + time
-	
+			if field == 'entities':
+				if entity[field]['urls']:
+					if entity[field]['urls'][0].has_key('expanded_url'):
+						url = entity[field]['urls'][0]['expanded_url']
+				else:
+					url = ''
+
 		cur = con.cursor()
-		sql = u"INSERT into mootwit (id,text,created_at) VALUES (%s,\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime)
+		sql = u"INSERT into mootwit (id,text,created_at,url) VALUES (%s,\"%s\",\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime,url)
 		cur.execute(sql)
