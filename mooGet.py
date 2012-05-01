@@ -75,11 +75,11 @@ for page in range(1,maxrounds + 1):
 				mdatetime = year + '-' + mon + '-' + day + ' ' + time
 			if field == 'entities':
 				if entity[field]['urls']:
-					if entity[field]['urls'][0].has_key('expanded_url'):
-						url = entity[field]['urls'][0]['expanded_url']
-				else:
-					url = ''
-
+					for urlnum in entity[field]['urls']:
+						urlcon = mdb.connect(dbhost,dbuser,dbpass,dbname)
+						urlcur = urlcon.cursor()
+						urlsql =  u"INSERT into moourls (tweetid,url,short) VALUES (%s,\"%s\",\"%s\")" % (tweetid,urlnum['expanded_url'],urlnum['url'])
+						urlcur.execute(urlsql)
 		cur = con.cursor()
-		sql = u"INSERT into mootwit (id,text,created_at,url) VALUES (%s,\"%s\",\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime,url)
+		sql = u"INSERT into mootwit (id,text,created_at) VALUES (%s,\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime)
 		cur.execute(sql)
