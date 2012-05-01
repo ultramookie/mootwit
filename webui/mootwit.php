@@ -42,12 +42,12 @@ function showEntriesArchive($num,$pnum) {
 
 function printEntry($id) {
        
-	$query = "select url, text, datediff(created_at, UTC_TIMESTAMP()) as date from mootwit where id = '$id'";
+	$query = "select text, datediff(created_at, UTC_TIMESTAMP()) as date from mootwit where id = '$id'";
         $result = mysql_query($query);
         $row = mysql_fetch_array($result);
 
         if (ereg(".*http.*",$row['text'])) {
-                $text = makeLinks($row['text'],$row['url']);
+                $text = makeLinks($row['text']);
         } else {
                 $text = $row['text'];
         }
@@ -67,12 +67,16 @@ function printEntry($id) {
 		
 }
 
-function makeLinks($text,$url) {
+function makeLinks($text) {
         $chunk = preg_split("/[\s,]+/", $text);
         $size = count($chunk);
 
         for($i=0;$i<$size;$i++) {
                 if(ereg("^http",$chunk[$i])) {
+			$query = "select url from moourls where short='$chunk[$i]'";
+        		$result = mysql_query($query);
+		        $row = mysql_fetch_array($result);
+			$url = $row['url'];
                         $new = "<a href=\"$url\" rel=\"nofollow\" target=\"blank\">$url</a>";
                         $total = $total . " " . $new;
                 } else {
