@@ -76,15 +76,42 @@ function makeLinks($text) {
 			$query = "select url from moourls where short='$chunk[$i]'";
         		$result = mysql_query($query);
 		        $row = mysql_fetch_array($result);
-			$url = $row['url'];
-                        $new = "<a href=\"$url\" rel=\"nofollow\" target=\"blank\">$url</a>";
-                        $total = $total . " " . $new;
+			$realurl = $row['url'];
+               		if(ereg("^http.*youtube\.com.*watch",$realurl)) {
+                        	$embed = makeYouTube($realurl);
+                        	$total = $total . "<br /><br />" . $embed . "<br /><br />";
+			} else {
+                        	$new = "<a href=\"$realurl\" rel=\"nofollow\" target=\"blank\">$realurl</a>";
+                        	$total = $total . " " . $new;
+			}
+
                 } else {
                         $total = $total . " " . $chunk[$i];
                 }
         }
 
         return $total;
+}
+
+function makeYouTube($in_url) {
+
+        list($blah,$args) = split("\?",$in_url,2);
+
+        if ($args) {
+                $argsList = split("\&",$args);
+                $num = count($argsList);
+                for($i=0;$i<=$num;$i++) {
+                        list($key,$value) = split("=",$argsList[$i]);
+                        $$key = $value;
+                }
+                if ($v) {
+                        $youtube = "<iframe width=\"640\" height=\"360\" src=\"https://www.youtube-nocookie.com/embed/$v\" frameborder=\"0\" allowfullscreen></iframe>";
+                } else {
+                $youtube = "<a href=\"$youtube_url\">$youtube_url</a>";
+                }
+        }
+
+        return ($youtube);
 }
 
 function getNumEntries() {
