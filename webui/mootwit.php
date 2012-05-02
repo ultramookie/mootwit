@@ -93,6 +93,25 @@ function makeLinks($text) {
         return $total;
 }
 
+function makeRSSLinks($text) {
+        $chunk = preg_split("/[\s,]+/", $text);
+        $size = count($chunk);
+
+        for($i=0;$i<$size;$i++) {
+                if(ereg("^http",$chunk[$i])) {
+			$query = "select url from moourls where short='$chunk[$i]'";
+        		$result = mysql_query($query);
+		        $row = mysql_fetch_array($result);
+			$realurl = $row['url'];
+	        	$total = $total . " " . $realurl;
+                } else {
+                        $total = $total . " " . $chunk[$i];
+                }
+        }
+
+        return $total;
+}
+
 function makeYouTube($in_url) {
 
         list($blah,$args) = split("\?",$in_url,2);
@@ -122,3 +141,19 @@ function getNumEntries() {
 
         return($row['count(id)']);
 }
+
+function printRSS($num) {
+        $query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by id desc limit $num";
+        $result = mysql_query($query);
+
+        while ($row = mysql_fetch_array($result)) {
+		$url = makeRSSLinks($row['text']);
+                echo "\t<item>\n";
+                echo "\t\t<title>" . htmlspecialchars($url,ENT_COMPAT,UTF-8) . "</title>\n";
+                echo "\t\t<pubDate>" . $row['date'] . " GMT</pubDate>\n";
+                echo "\t\t<guid>https://twitter.com/#!/-/statuses/" . $row['id'] . "</guid>\n";
+                echo "\t\t<link>https://twitter.com/#!/-/statuses/" . $row['id'] . "</link>\n";
+                echo "\t</item>\n";
+        }
+}
+
