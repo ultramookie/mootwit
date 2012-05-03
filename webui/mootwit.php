@@ -10,12 +10,11 @@ error_reporting(E_ERROR | E_PARSE);
 
 
 $sitename = "mootwit";
-$siteurl = "http://someotherplace.doesnotexist";
+$siteurl = "http://somewhereoutthere.isyourdomain";
 $indexNum = 20;
 $numOfEntries = getNumEntries();
-# print replies in output? 1 for yes, 0 for no
-$printReplies = 1;
-$printRepliesRSS = 1;
+$printReplies = 0;
+$printRepliesRSS = 0;
 
 function showEntriesIndex($num,$printReplies) {
 
@@ -66,18 +65,17 @@ function printEntry($id) {
         }
 
         echo "<p class=\"entry\">" . $text . " </p>";
-        if ($row['date'] == 0) {
+	if ($row['date'] == 0) {
                 echo "<p class=\"timedate\"><a href=\"entry.php?number=$id\">today</a></p><hr />";
-        } else {
-                $diff = $row['date'] * -1;
-                if ($diff == 1) {
-                        $days = " day";
-                } else {
-                        $days = " days";
-                }
+	} else {
+		$diff = $row['date'] * -1;
+		if ($diff == 1) {
+			$days = " day";
+		} else {
+			$days = " days";
+		}
                 echo "<p class=\"timedate\"><a href=\"entry.php?number=$id\">$diff $days ago</a></p><hr />";
-        }
-
+	}
 		
 }
 
@@ -89,8 +87,15 @@ function makeLinks($text) {
                 if(ereg("^http",$chunk[$i])) {
 			$query = "select url from moourls where short='$chunk[$i]'";
         		$result = mysql_query($query);
-		        $row = mysql_fetch_array($result);
-			$realurl = $row['url'];
+			$shortened = mysql_num_rows($query);
+
+			if ($shortened == 0) {
+				$realurl = $chunk[$i];
+			} else {
+		        	$row = mysql_fetch_array($result);
+				$realurl = $row['url'];
+			}
+
                		if(ereg("^http.*youtube\.com.*watch",$realurl)) {
                         	$embed = makeYouTube($realurl);
                         	$total = $total . "<br /><br />" . $embed . "<br /><br />";
@@ -179,12 +184,12 @@ function printRSS($num,$printRepliesRSS) {
 
 function printChartData($months) {
 
-        $query = "select count(id),date_format(created_at, '%Y/%m') as date,date_format(created_at, '%b/%y') as mon from mootwit group by date desc limit $months";
-        $result = mysql_query($query);
+	$query = "select count(id),date_format(created_at, '%Y/%m') as date,date_format(created_at, '%b/%y') as mon from mootwit group by date desc limit $months";
+	$result = mysql_query($query);
 
-        $rows = mysql_num_rows($result);
+	$rows = mysql_num_rows($result);
 
-        while ($row = mysql_fetch_array($result)) {
-                echo "{category:\"" . $row['mon'] . "\", values:" . $row['count(id)'] . "},";
-        }
+	while ($row = mysql_fetch_array($result)) {
+		echo "{category:\"" . $row['mon'] . "\", values:" . $row['count(id)'] . "},";
+	}
 }
