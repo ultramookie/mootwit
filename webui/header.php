@@ -7,6 +7,7 @@ include_once("mootwit.php");
 <html>
 <head>
 <title><? echo "$sitename"; ?> </title>
+<script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.0/build/cssreset/cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.0/build/cssfonts/cssfonts-min.css">
 <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
