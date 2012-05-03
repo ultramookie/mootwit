@@ -87,7 +87,7 @@ function makeLinks($text) {
                 if(ereg("^http",$chunk[$i])) {
 			$query = "select url from moourls where short='$chunk[$i]'";
         		$result = mysql_query($query);
-			$shortened = mysql_num_rows($query);
+			$shortened = mysql_num_rows($result);
 
 			if ($shortened == 0) {
 				$realurl = $chunk[$i];
