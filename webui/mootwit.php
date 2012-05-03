@@ -176,3 +176,14 @@ function printRSS($num,$printRepliesRSS) {
         }
 }
 
+function printChartData($months) {
+
+        $query = "select count(id),date_format(created_at, '%Y/%m') as date,date_format(created_at, '%b/%y') as mon from mootwit group by date desc limit $months";
+        $result = mysql_query($query);
+
+        $rows = mysql_num_rows($result);
+
+        while ($row = mysql_fetch_array($result)) {
+                echo "{category:\"" . $row['mon'] . "\", values:" . $row['count(id)'] . "},";
+        }
+}

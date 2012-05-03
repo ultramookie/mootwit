@@ -119,3 +119,8 @@ hr {
 	font-family: "Verdana", Sans;
 	color: red;
 }
+
+#mychart {
+    width: 720px;
+    height: 400px;
+}
