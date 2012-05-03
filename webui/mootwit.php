@@ -13,18 +13,10 @@ $sitename = "mootwit";
 $siteurl = "http://someotherplace.doesnotexist";
 $indexNum = 20;
 $numOfEntries = getNumEntries();
-# print replies in output? 1 for yes, 0 for no
-$printReplies = 1;
-$printRepliesRSS = 1;
 
-function showEntriesIndex($num,$printReplies) {
+function showEntriesIndex($num) {
 
-	if ($printReplies == 1) {
-        	$query = "select id from mootwit order by id desc limit $num";
-	} else {
-        	$query = "select id from mootwit where text not like '@%' order by id desc limit $num";
-	}
-
+        $query = "select id from mootwit order by id desc limit $num";
         $result = mysql_query($query);
 
         while ($row = mysql_fetch_array($result)) {
@@ -32,7 +24,7 @@ function showEntriesIndex($num,$printReplies) {
         }
 }
 
-function showEntriesArchive($num,$pnum,$printReplies) {
+function showEntriesArchive($num,$pnum) {
 
         if($pnum == 1) {
                 $offset = 1;
@@ -40,12 +32,7 @@ function showEntriesArchive($num,$pnum,$printReplies) {
                 $offset = ($pnum-1) * $num;
         }
 
-	if ($printReplies == 1) {
-        	$query = "select id from mootwit order by id desc limit $offset,$num";
-	} else {
-        	$query = "select id from mootwit where text not like '@%' order by id desc limit $offset,$num";
-	}
-
+        $query = "select id from mootwit order by id desc limit $offset,$num";
         $result = mysql_query($query);
 
         while ($row = mysql_fetch_array($result)) {
@@ -155,14 +142,8 @@ function getNumEntries() {
         return($row['count(id)']);
 }
 
-function printRSS($num,$printRepliesRSS) {
-
-        if ($printRepliesRSS == 1) {
-        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by id desc limit $num";
-        } else {
-        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit where text not like '@%' order by id desc limit $num";
-        }
-
+function printRSS($num) {
+        $query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by id desc limit $num";
         $result = mysql_query($query);
 
         while ($row = mysql_fetch_array($result)) {

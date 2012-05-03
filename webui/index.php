@@ -3,7 +3,7 @@
 ?>
 
 <?php
-	showEntriesIndex($indexNum,$printReplies);
+	showEntriesIndex($indexNum);
 
 	echo "<a href=\"" . $siteUrl  . "archive.php?pagenum=2\" class=\"box\">older &#187;</a>";
 ?>

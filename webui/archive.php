@@ -15,7 +15,7 @@
                 }
         }
 
-	showEntriesArchive($indexNum,$pagenum,$printReplies);
+	showEntriesArchive($indexNum,$pagenum);
 
 	$pagenum++;
 
