@@ -5,7 +5,7 @@
 <?php
 	showEntriesIndex($indexNum,$printReplies);
 
-	echo "<a href=\"" . $siteUrl  . "archive.php?pagenum=2\" class=\"box\">older &#187;</a>";
+	echo "<a href=\"" . $siteUrl  . "archive.php?pagenum=2\" class=\"box\">next &#187;</a>";
 ?>
 
 <?php

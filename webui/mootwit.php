@@ -55,7 +55,7 @@ function showEntriesArchive($num,$pnum,$printReplies) {
 	$pagenum = $pnum + 1;
 
 	if ($numEntries == $num) {
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?pagenum=" . $pagenum . "\" class=\"box\">older &#187;</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?pagenum=" . $pagenum . "\" class=\"box\">next &#187;</a>";
 	}
 }
 

@@ -19,7 +19,6 @@
 
 	$pagenum++;
 
-	echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?pagenum=" . $pagenum . "\" class=\"box\">older &#187;</a>";
 ?>
 
 <?php
