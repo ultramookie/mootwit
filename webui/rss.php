@@ -22,7 +22,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	<atom:link href="<?php echo $siteurl; ?>/rss.php" rel="self" type="application/rss+xml" />
 	<ttl>5</ttl>
 <?php
-	printRSS($numRss,$printRepliesRSS);
+	printRSS($numRss,$printRepliesRSS,$siteurl);
 ?>
 
   </channel>

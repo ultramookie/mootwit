@@ -161,7 +161,7 @@ function getNumEntries() {
         return($row['count(id)']);
 }
 
-function printRSS($num,$printRepliesRSS) {
+function printRSS($num,$printRepliesRSS,$siteurl) {
 
         if ($printRepliesRSS == 1) {
         	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by id desc limit $num";
@@ -176,8 +176,8 @@ function printRSS($num,$printRepliesRSS) {
                 echo "\t<item>\n";
                 echo "\t\t<title>" . htmlspecialchars($url,ENT_COMPAT,UTF-8) . "</title>\n";
                 echo "\t\t<pubDate>" . $row['date'] . " GMT</pubDate>\n";
-                echo "\t\t<guid>https://twitter.com/#!/-/statuses/" . $row['id'] . "</guid>\n";
-                echo "\t\t<link>https://twitter.com/#!/-/statuses/" . $row['id'] . "</link>\n";
+                echo "\t\t<guid>" . $siteurl . "/entry.php?number=" . $row['id'] . "</guid>\n";
+                echo "\t\t<link>" . $siteurl  . "/entry.php?number=" . $row['id'] . "</link>\n";
                 echo "\t</item>\n";
         }
 }
