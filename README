@@ -19,6 +19,9 @@ run every so often to grab any new tweets.
 if you want a web front-end to display what you're backing
 up, use the files in "webui" to do that.
 
+you'll need to have mod_rewrite enabled for the webui to 
+work.
+
 copy "config-example.php" over to "config.php". then edit:
   - db information
 

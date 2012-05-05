@@ -66,7 +66,7 @@ function printEntry($id) {
 
         echo "<p class=\"entry\">" . $text . " </p>";
 	if ($row['date'] == 0) {
-                echo "<p class=\"timedate\"><a href=\"entry.php?number=$id\">today</a></p><hr />";
+                echo "<p class=\"timedate\"><a href=\"/$id\">today</a></p><hr />";
 	} else {
 		$diff = $row['date'] * -1;
 		if ($diff == 1) {
@@ -74,7 +74,7 @@ function printEntry($id) {
 		} else {
 			$days = " days";
 		}
-                echo "<p class=\"timedate\"><a href=\"entry.php?number=$id\">$diff $days ago</a></p><hr />";
+                echo "<p class=\"timedate\"><a href=\"/$id\">$diff $days ago</a></p><hr />";
 	}
 		
 }
@@ -176,8 +176,8 @@ function printRSS($num,$printRepliesRSS,$siteurl) {
                 echo "\t<item>\n";
                 echo "\t\t<title>" . htmlspecialchars($url,ENT_COMPAT,UTF-8) . "</title>\n";
                 echo "\t\t<pubDate>" . $row['date'] . " GMT</pubDate>\n";
-                echo "\t\t<guid>" . $siteurl . "/entry.php?number=" . $row['id'] . "</guid>\n";
-                echo "\t\t<link>" . $siteurl  . "/entry.php?number=" . $row['id'] . "</link>\n";
+                echo "\t\t<guid>" . $siteurl . "/" . $row['id'] . "</guid>\n";
+                echo "\t\t<link>" . $siteurl  . "/" . $row['id'] . "</link>\n";
                 echo "\t</item>\n";
         }
 }
