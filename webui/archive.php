@@ -16,9 +16,6 @@
         }
 
 	showEntriesArchive($indexNum,$pagenum,$printReplies);
-
-	$pagenum++;
-
 ?>
 
 <?php
