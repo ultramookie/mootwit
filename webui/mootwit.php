@@ -46,10 +46,17 @@ function showEntriesArchive($num,$pnum,$printReplies) {
 	}
 
         $result = mysql_query($query);
+	$numEntries = mysql_num_rows($result);
 
         while ($row = mysql_fetch_array($result)) {
 		printEntry($row['id']);
         }
+
+	$pagenum = $pnum + 1;
+
+	if ($numEntries == $num) {
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?pagenum=" . $pagenum . "\" class=\"box\">older &#187;</a>";
+	}
 }
 
 function printEntry($id) {
