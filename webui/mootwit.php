@@ -10,8 +10,8 @@ error_reporting(E_ERROR | E_PARSE);
 
 
 $sitename = "mootwit";
-$siteurl = "http://somewhereoutthere.isyourdomain";
-$indexNum = 20;
+$siteurl = "https://github.com/ultramookie/mootwit";
+$indexNum = 7;
 $numOfEntries = getNumEntries();
 $printReplies = 0;
 $printRepliesRSS = 0;
@@ -53,8 +53,11 @@ function showEntriesArchive($num,$pnum,$printReplies) {
 }
 
 function printEntry($id) {
-       
-	$query = "select text, datediff(created_at, UTC_TIMESTAMP()) as date from mootwit where id = '$id'";
+     
+	$hoursecs = 60 * 60; 
+	$daysecs = 60 * 60 * 24;
+ 
+	$query = "select text, unix_timestamp(UTC_TIMESTAMP()) - unix_timestamp(created_at) as secdiff from mootwit where id = '$id'";
         $result = mysql_query($query);
         $row = mysql_fetch_array($result);
 
@@ -64,18 +67,24 @@ function printEntry($id) {
                 $text = $row['text'];
         }
 
+	$timediff = $row['secdiff'];
+	$hours = (int)($timediff / $hoursecs);
+	$days = (int)($hours / 24);
+
         echo "<p class=\"entry\">" . $text . " </p>";
-	if ($row['date'] == 0) {
-                echo "<p class=\"timedate\"><a href=\"/$id\">today</a></p><hr />";
+	if ($timediff < $hoursecs) {
+		$time = (int)($timediff / 60) . " minutes";
+	} else if (($hours > 1) && ($hours < 24)) {
+			$time = "$hours hours";
+	} else if ($hours == 1) {
+			$time = "$hours hour";
+	} else if ($days == 1) {
+			$time = "$days day";
 	} else {
-		$diff = $row['date'] * -1;
-		if ($diff == 1) {
-			$days = " day";
-		} else {
-			$days = " days";
-		}
-                echo "<p class=\"timedate\"><a href=\"/$id\">$diff $days ago</a></p><hr />";
+			$time = "$days days";
 	}
+                
+	echo "<p class=\"timedate\"><a href=\"/$id\">$time ago</a></p><hr />";
 		
 }
 
