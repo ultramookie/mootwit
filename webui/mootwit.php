@@ -66,6 +66,9 @@ function printEntry($id) {
  
 	$query = "select text, unix_timestamp(UTC_TIMESTAMP()) - unix_timestamp(created_at) as secdiff from mootwit where id = '$id'";
         $result = mysql_query($query);
+        if (mysql_num_rows($result) == 0) {
+                return;
+        }
         $row = mysql_fetch_array($result);
 
         if (ereg(".*http.*",$row['text'])) {
