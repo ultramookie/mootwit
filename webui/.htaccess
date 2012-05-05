@@ -2,5 +2,6 @@
 RewriteEngine On
 RewriteBase /
 RewriteRule ^([0-9]+)$ /entry.php?number=$1 [QSA,L]
+RewriteRule ^page-([0-9]+)$ /archive.php?pagenum=$1 [QSA,L]
 </IfModule>
 
