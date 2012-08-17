@@ -8,7 +8,6 @@
 
 error_reporting(E_ERROR | E_PARSE);
 
-
 $sitename = "mootwit";
 $siteurl = "https://github.com/ultramookie/mootwit";
 $indexNum = 7;
@@ -19,9 +18,9 @@ $printRepliesRSS = 0;
 function showEntriesIndex($num,$printReplies) {
 
 	if ($printReplies == 1) {
-        	$query = "select id from mootwit order by id desc limit $num";
+        	$query = "select id from mootwit order by created_at desc limit $num";
 	} else {
-        	$query = "select id from mootwit where text not like '@%' order by id desc limit $num";
+        	$query = "select id from mootwit where text not like '@%' order by created_at desc limit $num";
 	}
 
         $result = mysql_query($query);
@@ -40,9 +39,9 @@ function showEntriesArchive($num,$pnum,$printReplies) {
         }
 
 	if ($printReplies == 1) {
-        	$query = "select id from mootwit order by id desc limit $offset,$num";
+        	$query = "select id from mootwit order by created_at desc limit $offset,$num";
 	} else {
-        	$query = "select id from mootwit where text not like '@%' order by id desc limit $offset,$num";
+        	$query = "select id from mootwit where text not like '@%' order by created_at desc limit $offset,$num";
 	}
 
         $result = mysql_query($query);
@@ -66,9 +65,9 @@ function printEntry($id) {
  
 	$query = "select text, unix_timestamp(UTC_TIMESTAMP()) - unix_timestamp(created_at) as secdiff from mootwit where id = '$id'";
         $result = mysql_query($query);
-        if (mysql_num_rows($result) == 0) {
-                return;
-        }
+	if (mysql_num_rows($result) == 0) {
+		return;
+	}
         $row = mysql_fetch_array($result);
 
         if (ereg(".*http.*",$row['text'])) {
@@ -80,6 +79,18 @@ function printEntry($id) {
 	$timediff = $row['secdiff'];
 	$hours = (int)($timediff / $hoursecs);
 	$days = (int)($hours / 24);
+
+	$query = "select gid from mootwit where id = '$id' and gid is NOT NULL";
+        $result = mysql_query($query);
+	if (mysql_num_rows($result) > 0) {
+		$query = "select url from moourls where tweetid = '$id'";
+       		$result = mysql_query($query);
+		for ($i = 0; $i <= mysql_num_rows($result); $i++){
+		        while ($row = mysql_fetch_array($result)) {
+			$text = $text . "<br/>" . makeLinks($row['url']);
+        		}
+		}
+	}
 
         echo "<p class=\"entry\">" . $text . " </p>";
 	if ($timediff < $hoursecs) {
@@ -117,7 +128,7 @@ function makeLinks($text) {
 
                		if(ereg("^http.*youtube\.com.*watch",$realurl)) {
                         	$embed = makeYouTube($realurl);
-                        	$total = $total . "<br /><br />" . $embed . "<br /><br />";
+                        	$total = $total . "<br />" . $embed . "<br /><br />";
 			} else {
                         	$new = "<a href=\"$realurl\" rel=\"nofollow\" target=\"blank\">$realurl</a>";
                         	$total = $total . " " . $new;
@@ -183,9 +194,9 @@ function getNumEntries() {
 function printRSS($num,$printRepliesRSS,$siteurl) {
 
         if ($printRepliesRSS == 1) {
-        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by id desc limit $num";
+        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by created_at desc limit $num";
         } else {
-        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit where text not like '@%' order by id desc limit $num";
+        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit where text not like '@%' order by created_at desc limit $num";
         }
 
         $result = mysql_query($query);
@@ -210,5 +221,17 @@ function printChartData($months) {
 
 	while ($row = mysql_fetch_array($result)) {
 		echo "{category:\"" . $row['mon'] . "\", values:" . $row['count(id)'] . "},";
+	}
+}
+
+function printDailyChartDate() {
+
+	$query = "select (count(id) / count(distinct date_format(created_at, '%m %d %y'))) as average, date_format(created_at, '%w') as day, date_format(created_at, '%W') as longday from mootwit group by day order by day";
+	$result = mysql_query($query);
+
+	$rows = mysql_num_rows($result);
+
+	while ($row = mysql_fetch_array($result)) {
+		echo "{category:\"" . $row['longday'] . "\", values:" . $row['average'] . "},";
 	}
 }
