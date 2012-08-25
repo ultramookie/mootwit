@@ -87,7 +87,7 @@ function printEntry($id) {
        		$result = mysql_query($query);
 		for ($i = 0; $i <= mysql_num_rows($result); $i++){
 		        while ($row = mysql_fetch_array($result)) {
-			$text = $text . "<br/>" . makeLinks($row['url']);
+			$text = $text . "<br /><br/>" . makeLinks($row['url']);
         		}
 		}
 	}
