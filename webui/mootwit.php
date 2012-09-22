@@ -70,13 +70,11 @@ function printEntry($id) {
 	}
         $row = mysql_fetch_array($result);
 
-        #if (ereg(".*http.*",$row['text'])) {
-        #        $text = makeLinks($row['text']);
-        #} else {
-        #        $text = $row['text'];
-        #}
-
-        $text = $row['text'];
+        if (ereg(".*http.*",$row['text'])) {
+                $text = makeLinks($row['text']);
+        } else {
+                $text = $row['text'];
+        }
 
 	$timediff = $row['secdiff'];
 	$hours = (int)($timediff / $hoursecs);
@@ -112,7 +110,7 @@ function printEntry($id) {
 }
 
 function makeLinks($text) {
-        $chunk = preg_split("/[\s,]+/", $text);
+        $chunk = preg_split("/[\s]+/", $text);
         $size = count($chunk);
 
         for($i=0;$i<$size;$i++) {
@@ -145,7 +143,7 @@ function makeLinks($text) {
 }
 
 function makeRSSLinks($text) {
-        $chunk = preg_split("/[\s,]+/", $text);
+        $chunk = preg_split("/[\s]+/", $text);
         $size = count($chunk);
 
         for($i=0;$i<$size;$i++) {
