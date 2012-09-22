@@ -70,11 +70,13 @@ function printEntry($id) {
 	}
         $row = mysql_fetch_array($result);
 
-        if (ereg(".*http.*",$row['text'])) {
-                $text = makeLinks($row['text']);
-        } else {
-                $text = $row['text'];
-        }
+        #if (ereg(".*http.*",$row['text'])) {
+        #        $text = makeLinks($row['text']);
+        #} else {
+        #        $text = $row['text'];
+        #}
+
+        $text = $row['text'];
 
 	$timediff = $row['secdiff'];
 	$hours = (int)($timediff / $hoursecs);
