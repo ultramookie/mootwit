@@ -1,6 +1,10 @@
 <?php 
 include_once("db.php");
 include_once("mootwit.php");
+
+$id = $_GET['number'];
+$description = getArticleDesc($id);
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" 
 "http://www.w3.org/TR/html4/strict.dtd">
@@ -13,6 +17,7 @@ include_once("mootwit.php");
 <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
 <link rel="alternate" type="application/rss+xml" title="<?php echo "$sitename"; ?> (RSS 2.0)" href="<?php echo "$siteurl"; ?>/rss.php"  />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
+<meta name="description" content="<? echo "$description"; ?>" />
 </head>
 <body>
 <div class="main">

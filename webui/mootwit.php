@@ -87,7 +87,7 @@ function printEntry($id) {
        		$result = mysql_query($query);
 		for ($i = 0; $i <= mysql_num_rows($result); $i++){
 		        while ($row = mysql_fetch_array($result)) {
-			$text = $text . "<br /><br/>" . makeLinks($row['url']);
+			$text = $text . "<br /><br />" . makeLinks($row['url']);
         		}
 		}
 	}
@@ -234,4 +234,20 @@ function printDailyChartDate() {
 	while ($row = mysql_fetch_array($result)) {
 		echo "{category:\"" . $row['longday'] . "\", values:" . $row['average'] . "},";
 	}
+}
+
+function getArticleDesc($id) {
+
+        $cid = mysql_real_escape_string($id);
+
+        $query = "select text from mootwit where id='$cid'";
+
+        $result = mysql_query($query);
+        $row = mysql_fetch_array($result);
+
+        $shortdesc = mysql_real_escape_string(strip_tags(substr($row['text'],0,251)));
+
+        $returndesc = stripslashes($shortdesc) . "...";
+
+        return $returndesc;
 }
