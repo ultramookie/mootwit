@@ -76,6 +76,7 @@ function printEntry($id) {
                 $text = $row['text'];
         }
 
+
 	$timediff = $row['secdiff'];
 	$hours = (int)($timediff / $hoursecs);
 	$days = (int)($hours / 24);
@@ -142,25 +143,6 @@ function makeLinks($text) {
         return $total;
 }
 
-function makeRSSLinks($text) {
-        $chunk = preg_split("/[\s]+/", $text);
-        $size = count($chunk);
-
-        for($i=0;$i<$size;$i++) {
-                if(ereg("^http",$chunk[$i])) {
-			$query = "select url from moourls where short='$chunk[$i]'";
-        		$result = mysql_query($query);
-		        $row = mysql_fetch_array($result);
-			$realurl = $row['url'];
-	        	$total = $total . " " . $realurl;
-                } else {
-                        $total = $total . " " . $chunk[$i];
-                }
-        }
-
-        return $total;
-}
-
 function makeYouTube($in_url) {
 
         list($blah,$args) = split("\?",$in_url,2);
@@ -193,19 +175,30 @@ function getNumEntries() {
 
 function printRSS($num,$printRepliesRSS,$siteurl) {
 
+	$rssTitleLen = 64;
+        $rssSummaryLen = 1024;
+
         if ($printRepliesRSS == 1) {
-        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by created_at desc limit $num";
+        	$query = "select t.id,t.text,date_format(t.created_at, '%a, %d %b %Y %H:%i:%s') as date, u.url from mootwit t join moourls u on u.tweetid=t.id  order by created_at desc limit $num";
         } else {
-        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit where text not like '@%' order by created_at desc limit $num";
+        	$query = "select t.id,t.text,date_format(t.created_at, '%a, %d %b %Y %H:%i:%s') as date, u.url from mootwit t join moourls u on u.tweetid=t.id where text not like '@%' order by created_at desc limit $num";
         }
 
         $result = mysql_query($query);
 
         while ($row = mysql_fetch_array($result)) {
-		$url = makeRSSLinks($row['text']);
+		$title = strip_tags(substr($row['text'],0,$rssTitleLen));
+		$title = ereg_replace("&nbsp;|\n|\r|\t","",$title);
+                $title = htmlspecialchars($title,ENT_COMPAT,UTF-8);
+                $shortBody = strip_tags(substr($row['text'],0,$rssSummaryLen));
+                $shortBody = ereg_replace("&nbsp;|\n|\r|\t","",$shortBody);
+                $shortBody = htmlspecialchars($shortBody,ENT_COMPAT,UTF-8);
+                $cleanbody = ereg_replace("&nbsp;|\n|\r|\t","",$row['text']);
                 echo "\t<item>\n";
-                echo "\t\t<title>" . htmlspecialchars($url,ENT_COMPAT,UTF-8) . "</title>\n";
-                echo "\t\t<pubDate>" . $row['date'] . " GMT</pubDate>\n";
+                echo "\t\t<title>" . $title . "...</title>\n";
+                echo "\t\t<pubDate>" . $row['date'] . " PST</pubDate>\n";
+                echo "\t\t<description><![CDATA[" . $shortBody . "]]>...</description>\n";
+                echo "\t\t<content:encoded><![CDATA[" . $cleanbody . " " . $row['url'] . " ]]></content:encoded>\n";
                 echo "\t\t<guid>" . $siteurl . "/" . $row['id'] . "</guid>\n";
                 echo "\t\t<link>" . $siteurl  . "/" . $row['id'] . "</link>\n";
                 echo "\t</item>\n";
@@ -238,9 +231,9 @@ function printDailyChartDate() {
 
 function getArticleDesc($id) {
 
-        $cid = mysql_real_escape_string($id);
+	$cid = mysql_real_escape_string($id);
 
-        $query = "select text from mootwit where id='$cid'";
+	$query = "select text from mootwit where id='$cid'";
 
         $result = mysql_query($query);
         $row = mysql_fetch_array($result);
