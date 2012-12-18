@@ -198,7 +198,7 @@ function printRSS($num,$printRepliesRSS,$siteurl) {
                 echo "\t\t<title>" . $title . "...</title>\n";
                 echo "\t\t<pubDate>" . $row['date'] . " PST</pubDate>\n";
                 echo "\t\t<description><![CDATA[" . $shortBody . "]]>...</description>\n";
-                echo "\t\t<content:encoded><![CDATA[" . $cleanbody . " " . $row['url'] . " ]]></content:encoded>\n";
+                echo "\t\t<content:encoded><![CDATA[" . $cleanbody . "<br /><br />" . $row['url'] . " ]]></content:encoded>\n";
                 echo "\t\t<guid>" . $siteurl . "/" . $row['id'] . "</guid>\n";
                 echo "\t\t<link>" . $siteurl  . "/" . $row['id'] . "</link>\n";
                 echo "\t</item>\n";
