@@ -7,30 +7,18 @@ create a mysql database.
 use the schema file (mootwit.sql) to create the base table.
 
 IMPORTANT for BOTH new users and old twitter-only users who
-want to use google+ imports too:
+want to use google+/app.net imports too:
 
 alter the base tables using moogooplusalters.sql.
 
-For Twitter only, and only for a limited time as Twitter
-has changed their API rules and regulations. More info here:
-https://dev.twitter.com/blog/changes-coming-to-twitter-api
+alter the base tables using mooappnetalters.sql.
 
-edit the mooGet.py script and put in all the right stuff:
-  - db information
-  - twitter account to backup
-  - etc
+!! TWITTER SUPPORT DEPRECATED !!
 
-note: the account must be public for this to work.
-
-if that's all you want, then cron the mooGet.py script to
-run every so often to grab any new tweets. remember, Twitter
-stuff will stop functioning soon when the API rule changes
-take effect.
-
-For Google+:
+*** Google+ ***
 
 edit moogooplusget.py script and put in all the right stuff:
-  - db information
+  - db information (self-explanatory in script)
   - google+ userid (details in script)
   - google api key (details in script)
   - etc
@@ -41,6 +29,24 @@ to run every so often to grab any new posts.
 note: moogooplusget.py only gets public posts (limitation of the
 google+ api currently). also, the script only fetches posts,
 shares and location check-ins are ignored.
+
+*** App.net ***
+
+pre-requisites: 
+  - feedparser (http://pythonhosted.org/feedparser/)
+  - BeautifulSoup (http://www.crummy.com/software/BeautifulSoup/)
+
+edit mooappnetget.py script and put in all the right stuff:
+  - db information (self-explanatory in script)
+  - rss url for the user you wish to back up 
+
+if that's all you want, then cron the mooappnetget.py script
+to run every so often to grab any new posts.
+
+note: mooappnetget.py reads posts from an rss feed for a user,
+that means that only public posts are backed up.
+
+*** Front-End ***
 
 if you want a web front-end to display what you're backing
 up, use the files in "webui" to do that.
