@@ -179,9 +179,9 @@ function printRSS($num,$printRepliesRSS,$siteurl) {
         $rssSummaryLen = 1024;
 
         if ($printRepliesRSS == 1) {
-        	$query = "select t.id,t.text,date_format(t.created_at, '%a, %d %b %Y %H:%i:%s') as date, u.url from mootwit t join moourls u on u.tweetid=t.id  order by created_at desc limit $num";
+        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit order by created_at desc limit $num";
         } else {
-        	$query = "select t.id,t.text,date_format(t.created_at, '%a, %d %b %Y %H:%i:%s') as date, u.url from mootwit t join moourls u on u.tweetid=t.id where text not like '@%' order by created_at desc limit $num";
+        	$query = "select id,text,date_format(created_at, '%a, %d %b %Y %H:%i:%s') as date from mootwit where text not like '@%' order by created_at desc limit $num";
         }
 
         $result = mysql_query($query);
@@ -198,7 +198,7 @@ function printRSS($num,$printRepliesRSS,$siteurl) {
                 echo "\t\t<title>" . $title . "...</title>\n";
                 echo "\t\t<pubDate>" . $row['date'] . " PST</pubDate>\n";
                 echo "\t\t<description><![CDATA[" . $shortBody . "]]>...</description>\n";
-                echo "\t\t<content:encoded><![CDATA[" . $cleanbody . "<br /><br />" . $row['url'] . " ]]></content:encoded>\n";
+                echo "\t\t<content:encoded><![CDATA[" . $cleanbody . "<br /><br /> ]]></content:encoded>\n";
                 echo "\t\t<guid>" . $siteurl . "/" . $row['id'] . "</guid>\n";
                 echo "\t\t<link>" . $siteurl  . "/" . $row['id'] . "</link>\n";
                 echo "\t</item>\n";
