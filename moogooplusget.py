@@ -55,13 +55,15 @@ gplusvalues = gplusjson.values()
 gplusitems = gplusvalues[0]
 
 for item in gplusitems:
-	if item['verb'] == 'post':
+	if item['verb'] == 'share' or item['verb'] == 'post':
 		gid = item['id']
 		dt = time.strptime(item['published'],"%Y-%m-%dT%H:%M:%S.%fZ")
 		udt = time.mktime(dt)
 		unixts = int(udt)
 		intext = item['object']['content']
                 actualtext = intext.encode('ascii','ignore')
+                if item['verb'] == 'share':
+                        actualtext = "<b>Shared</b>: " + actualtext
 		if unixts < sinceid:
 			break
 		if len(item['object']) > 1:
