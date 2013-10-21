@@ -9,6 +9,7 @@ import json
 import MySQLdb as mdb
 import codecs
 import pprint
+import urllib2
 import oauth2 as oauth
 
 # database stuff populate as necessary
@@ -33,7 +34,7 @@ client = oauth.Client(consumer, access_token)
 # number of entries to process at once
 count = 200 
 # hard limit on the number of entries from a user by twitter
-hardlimit = 3200 
+hardlimit = 3200
 # max rounds that can happen
 maxrounds = hardlimit / count
 
@@ -87,9 +88,17 @@ for page in range(1,maxrounds + 1):
 			if field == 'entities':
 				if entity[field]['urls']:
 					for urlnum in entity[field]['urls']:
+			                        try:
+							req = urllib2.urlopen(urlnum['expanded_url'])
+						except urllib2.HTTPError, e:
+							realurl = urlnum['expanded_url']
+						except urllib2.URLError, e:
+							realurl = urlnum['expanded_url']
+						else:
+							realurl = req.url
 						urlcon = mdb.connect(dbhost,dbuser,dbpass,dbname)
 						urlcur = urlcon.cursor()
-						urlsql =  u"INSERT into moourls (tweetid,url,short) VALUES (%s,\"%s\",\"%s\")" % (tweetid,urlnum['expanded_url'],urlnum['url'])
+						urlsql =  u"INSERT into moourls (tweetid,url,short) VALUES (%s,\"%s\",\"%s\")" % (tweetid,realurl,urlnum['url'])
 						urlcur.execute(urlsql)
 						urlcon.commit()
 		cur = con.cursor()
