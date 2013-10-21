@@ -5,11 +5,11 @@
 # licensed under gplv3
 # http://www.gnu.org/licenses/gpl-3.0.html
 
-import urllib
 import json
 import MySQLdb as mdb
 import codecs
 import pprint
+import oauth2 as oauth
 
 # database stuff populate as necessary
 dbuser=''
@@ -19,10 +19,21 @@ dbname='mootwit'
 
 # twitter username
 user = ''
+
+# twitter stuff
+CONSUMER_KEY = ""
+CONSUMER_SECRET = ""
+ACCESS_KEY = ""
+ACCESS_SECRET = ""
+
+consumer = oauth.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
+access_token = oauth.Token(key=ACCESS_KEY, secret=ACCESS_SECRET)
+client = oauth.Client(consumer, access_token)
+
 # number of entries to process at once
-count = 200
+count = 200 
 # hard limit on the number of entries from a user by twitter
-hardlimit = 3200
+hardlimit = 3200 
 # max rounds that can happen
 maxrounds = hardlimit / count
 
@@ -49,14 +60,14 @@ else:
 	sinceid = "&since_id=%s" % str(result.fetch_row()[0][0])
 
 # the base url
-urlbase = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&include_entities=true&trim_user=true' + sinceid
+urlbase = 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=' + user + '&count=' + str(count) + '&include_entities=true&trim_user=true' + sinceid
 
 con = mdb.connect(dbhost,dbuser,dbpass,dbname)
 
 for page in range(1,maxrounds + 1):
 	url = urlbase + '&page=' + str(page)
-	twitreturn = urllib.urlopen(url)
-	twitjson = json.loads(twitreturn.read())
+	response, data = client.request(url)
+	twitjson = json.loads(data)
 	if not twitjson:
 		break
 	for entity in twitjson:
@@ -80,6 +91,8 @@ for page in range(1,maxrounds + 1):
 						urlcur = urlcon.cursor()
 						urlsql =  u"INSERT into moourls (tweetid,url,short) VALUES (%s,\"%s\",\"%s\")" % (tweetid,urlnum['expanded_url'],urlnum['url'])
 						urlcur.execute(urlsql)
+						urlcon.commit()
 		cur = con.cursor()
 		sql = u"INSERT into mootwit (id,text,created_at) VALUES (%s,\"%s\",\"%s\")" % (tweetid,mdb.escape_string(tweettext),mdatetime)
 		cur.execute(sql)
+		con.commit()

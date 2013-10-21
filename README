@@ -13,7 +13,16 @@ alter the base tables using moogooplusalters.sql.
 
 alter the base tables using mooappnetalters.sql.
 
-!! TWITTER SUPPORT DEPRECATED !!
+*** Twitter ***
+
+edit mooGet.py script and put in all the right stuff:
+  - db information (self-explanatory in script)
+  - twitter username that you want to backup
+  - twitter related oath information that you can get
+    by registering an app at dev.twitter.com
+
+if that's all you want, then cron the mooGet.py script
+to run every so often to grab any new tweets.
 
 *** Google+ ***
 
