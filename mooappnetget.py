@@ -58,7 +58,6 @@ for item in feed.entries:
 				word = req.url
 		realtext = realtext + " " + word
 	actualtext = realtext.encode('ascii','ignore').strip()
-	print actualtext
 	dt = time.strptime(item.published, "%a, %d %b %Y %H:%M:%S -0000")
 	udt = time.mktime(dt)
 	unixts = int(udt)
