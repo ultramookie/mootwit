@@ -13,19 +13,19 @@ import urllib2
 import oauth2 as oauth
 
 # database stuff populate as necessary
-dbuser=''
-dbpass=''
+dbuser='DBUSER'
+dbpass='DBPASS'
 dbhost='localhost'
 dbname='mootwit'
 
 # twitter username
-user = ''
+user = 'TWITTER_USER'
 
 # twitter stuff
-CONSUMER_KEY = ""
-CONSUMER_SECRET = ""
-ACCESS_KEY = ""
-ACCESS_SECRET = ""
+CONSUMER_KEY = "KEY"
+CONSUMER_SECRET = "SECRET"
+ACCESS_KEY = "ACCESS"
+ACCESS_SECRET = "SECRET"
 
 consumer = oauth.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
 access_token = oauth.Token(key=ACCESS_KEY, secret=ACCESS_SECRET)
